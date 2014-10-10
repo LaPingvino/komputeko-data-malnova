@@ -6,25 +6,11 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	data "github.com/komputeko/komputeko-data"
 	"os"
 	"regexp"
 	"strings"
 )
-
-type Terminaro []Entry
-type Entry struct {
-	Wordtype     string
-	Translations []Translation
-}
-type Translation struct {
-	Language string
-	Words    []Word
-}
-type Word struct {
-	Written string
-	Sources []string
-	//	Frequency float32
-}
 
 func ridx(s string) string {
 	r := regexp.MustCompile("(.*) /.*").FindStringSubmatch(s)
@@ -35,7 +21,7 @@ func ridx(s string) string {
 	}
 }
 
-func konverti(de string) (entry Entry, err error) {
+func konverti(de string) (entry data.Entry, err error) {
 	sourceline := strings.Split(de, "\t")
 	if len(sourceline) != 36 {
 		err = fmt.Errorf("Input file not valid")
@@ -57,22 +43,22 @@ func konverti(de string) (entry Entry, err error) {
 
 	// Getting the English definitions
 	if sourceline[3] != "" {
-		word := Word{
-			Written: regexp.MustCompile("^[^( ]+").FindString(sourceline[3]),
+		word := data.Word{
+			Written: strings.TrimSpace(regexp.MustCompile("^[^(]+").FindString(sourceline[3])),
 		}
-		words := []Word{word}
+		words := []data.Word{word}
 		if sourceline[4] != "" {
-			words = append(words, Word{Written: sourceline[4]})
+			words = append(words, data.Word{Written: sourceline[4]})
 		} else {
 			match := regexp.MustCompile(`\([^)]+\)`).FindString(sourceline[3])
 			if match != "" {
 				matchsplit := strings.Split(match, ",")
 				for i := 0; i < len(matchsplit); i++ {
-					words = append(words, Word{Written: strings.Trim(matchsplit[i], "() ")})
+					words = append(words, data.Word{Written: strings.Trim(matchsplit[i], "() ")})
 				}
 			}
 		}
-		english := Translation{"en", words}
+		english := data.Translation{"en", words}
 		entry.Translations = append(entry.Translations, english)
 	}
 
@@ -86,26 +72,26 @@ func konverti(de string) (entry Entry, err error) {
 				sources = append(sources, source)
 			}
 		}
-		word := Word{
+		word := data.Word{
 			Written: ridx(sourceline[5]),
 			Sources: sources,
 		}
-		words := []Word{word}
+		words := []data.Word{word}
 		if sourceline[10] != "" {
 			for _, source := range sourceline[11:13] {
 				if source != "" {
 					sources2 = append(sources2, source)
 				}
 			}
-			words = append(words, Word{Written: ridx(sourceline[10]), Sources: sources2})
+			words = append(words, data.Word{Written: ridx(sourceline[10]), Sources: sources2})
 		}
 		if sourceline[13] != "" {
 			if sourceline[14] != "" {
 				sources3 = []string{sourceline[14]}
 			}
-			words = append(words, Word{Written: ridx(sourceline[13]), Sources: sources3})
+			words = append(words, data.Word{Written: ridx(sourceline[13]), Sources: sources3})
 		}
-		esperanto := Translation{"eo", words}
+		esperanto := data.Translation{"eo", words}
 		entry.Translations = append(entry.Translations, esperanto)
 	}
 
@@ -122,18 +108,18 @@ func konverti(de string) (entry Entry, err error) {
 		if sourceline[15] != "" {
 			extrainfo = ", " + sourceline[15]
 		}
-		word := Word{
+		word := data.Word{
 			Written: sourceline[16] + extrainfo,
 			Sources: sourcesnl,
 		}
-		words := []Word{word}
+		words := []data.Word{word}
 		if sourceline[21] != "" {
 			if sourceline[22] != "" {
 				sourcesnl2 = []string{sourceline[22]}
 			}
-			words = append(words, Word{Written: sourceline[21], Sources: sourcesnl2})
+			words = append(words, data.Word{Written: sourceline[21], Sources: sourcesnl2})
 		}
-		dutch := Translation{"nl", words}
+		dutch := data.Translation{"nl", words}
 		entry.Translations = append(entry.Translations, dutch)
 	}
 
@@ -150,18 +136,18 @@ func konverti(de string) (entry Entry, err error) {
 		if sourceline[23] != "" {
 			extrainfofr = ", " + sourceline[23]
 		}
-		word := Word{
+		word := data.Word{
 			Written: sourceline[24] + extrainfofr,
 			Sources: sourcesfr,
 		}
-		words := []Word{word}
+		words := []data.Word{word}
 		if sourceline[29] != "" {
 			if sourceline[30] != "" {
 				sourcesfr2 = []string{sourceline[30]}
 			}
-			words = append(words, Word{Written: sourceline[29], Sources: sourcesfr2})
+			words = append(words, data.Word{Written: sourceline[29], Sources: sourcesfr2})
 		}
-		french := Translation{"fr", words}
+		french := data.Translation{"fr", words}
 		entry.Translations = append(entry.Translations, french)
 	}
 
@@ -176,26 +162,26 @@ func konverti(de string) (entry Entry, err error) {
 		if sourceline[33] != "" {
 			sourcesde = []string{sourceline[33]}
 		}
-		word := Word{
+		word := data.Word{
 			Written: sourceline[32] + extrainfode,
 			Sources: sourcesde,
 		}
-		words := []Word{word}
+		words := []data.Word{word}
 		if sourceline[34] != "" {
 			if sourceline[35] != "" {
 				sourcesde2 = []string{strings.TrimSpace(sourceline[35])}
 			}
-			words = append(words, Word{Written: sourceline[34], Sources: sourcesde2})
+			words = append(words, data.Word{Written: sourceline[34], Sources: sourcesde2})
 		}
-		german := Translation{"de", words}
+		german := data.Translation{"de", words}
 		entry.Translations = append(entry.Translations, german)
 	}
 
 	return
 }
 
-func konvertifluon(fluo *bufio.Reader) (terminaro Terminaro, err error) {
-	var result Entry
+func konvertifluon(fluo *bufio.Reader) (terminaro data.Terminaro, err error) {
+	var result data.Entry
 	for i, er := fluo.ReadString('\n'); er == nil; i, er = fluo.ReadString('\n') {
 		result, err = konverti(i)
 		if err != nil {
@@ -207,19 +193,11 @@ func konvertifluon(fluo *bufio.Reader) (terminaro Terminaro, err error) {
 }
 
 func main() {
-	var fileTo string
-	flag.StringVar(&fileTo, "o", "/tmp/output.json", "Write resulting file to this file.")
 	flag.Parse()
 	var fileFrom = flag.Arg(0)
 
 	filefrom, err := os.Open(fileFrom)
 	defer filefrom.Close()
-	if err != nil {
-		panic(err.Error())
-	}
-
-	fileto, err := os.Create(fileTo)
-	defer fileto.Close()
 	if err != nil {
 		panic(err.Error())
 	}

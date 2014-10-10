@@ -1,4 +1,7 @@
 novigi
 htmligi
+!novigi/
+!htmligi/
+*.html
 .*
 !.gitignore

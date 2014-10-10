@@ -1,0 +1,4 @@
+novigi
+htmligi
+.*
+!.gitignore

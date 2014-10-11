@@ -1,0 +1,52 @@
+body {
+	font-family: Arial, sans-serif;
+}
+
+.source {
+	background: #daeef3;
+	margin: 2px;
+	padding: 1px;
+	font-size: 75%;	
+}
+
+a img {
+	border: none;
+}
+
+#sercxrezultoj {
+	background: #daeef3; 
+	margin-top: 12px; 
+	margin-bottom: 16px;
+
+	border-top: 1px solid #4bacc6; 
+	border-bottom: 1px solid #4bacc6; 
+	padding-left: 8px; 
+	padding-top: 2px; 
+	padding-bottom: 2px; 
+	padding-right: 4px;
+
+	font-weight: bold;
+}
+
+.word {
+	margin: 1em;
+}
+
+.wordheader {
+	background: none repeat scroll 0% 0% #DAEEF3;
+	border: 1px solid #92CDDC;
+	padding: 2px;
+}
+
+.definition {
+	border: 1px solid #92CDDC;
+	padding: 2px;
+}
+
+@media (max-device-width: 480px) {
+.word {
+width: 90%;
+height: 3em;
+font-size: 3em;
+}
+}

@@ -2,73 +2,19 @@
 <head>
 	<title>Komputeko - prikomputila terminokolekto</title>
 	<meta charset="utf-8" />
-	<link rel="stylesheet" href="http://komputeko.net/komputeko.css" type="text/css">
-	<link rel="search" type="application/opensearchdescription+xml" href="/komputeko.xml" title="Komputeko" />
-	<link rel="shortcut icon" href="/favicon.ico" />
-
-<script language="javascript">
-   function change(form){
-   if(form.url.selectedIndex != 0) 
-   parent.location = form.url.options[form.url.selectedIndex].value
-   }
-	</script>
-	
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-6585679-3']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
+	<link rel="stylesheet" href="komputeko.css" type="text/css">
+	<link rel="shortcut icon" href="favicon.ico" />
 </head>
-<body onload="document.getElementById('vorto').focus();">
+<body>
 
-
-<br>
-<table>
-<tr>
-<td valign='middle' style='padding-right: 10px;'>
-<a href='./'><img src="http://komputeko.net/komputeko-malgranda.png"  style='vertical-align: bottom;'></a>
-</td>
-<td valign='middle'>
-<form style='margin: 4px 0px;'>
-  <input id='vorto' name="vorto" size=40 value="">
-  <input type=submit value="Serĉi" style="background: #f4feff;">
-</form>
-</td>
-</table>
-
+<a href='index.html'><img src="komputeko-malgranda.png"  style='vertical-align: bottom;'></a>
 
 <div id='sercxrezultoj'>
-<table width='100%'><tr>
-<td ><b>{{.Title}}</b>
-<td width='80%' align='right'><font size=-1>
-Unuopa rezultpaĝo
-</font></table>
+{{.Title}}
 </div>
 
 {{.Body}}
 
-
-<div style='text-align: center; font-size: 75%; margin: 32px 0px 8px 0px; border-top: 1px solid #4bacc6; border-bottom: 1px solid #4bacc6; background: #daeef3; padding: 2px 0px 3px 0px;'>
-<a href='./komputeko-eo.txt' style='color: #1b6ca6;'>Indekso</a>
-
-<!--<span style='color: #92cddc; margin: 0px 6px;'>|</span>
-<a href='' style='color: #1b6ca6;'>Gastlibro</a>
-<span style='color: #92cddc; margin: 0px 6px;'>|</span>
-<a href='' style='color: #1b6ca6;'>Kontakto</a>-->
-</div>
-<br>
-
-
-
-</div>
 </body>
 </html>
 

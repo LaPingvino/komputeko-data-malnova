@@ -97,33 +97,37 @@ func writeHTML(ctx data.Entry, dirname string) error {
 }
 
 func writeLanguageIndex(dirname string, lang string, letter rune) error {
+	var haswords bool
 	showme := struct {
 		Title string
 		Body  template.HTML
 	}{
-		"Index " + lang + ":" + fmt.Sprint(letter),
+		"Index " + lang + ":" + string(letter),
 		template.HTML(""),
-	}
-
-	file, err := os.Create("index_" + lang + "_" + fmt.Sprint(letter) + ".html")
-	defer file.Close()
-	if err != nil {
-		return err
 	}
 
 	showme.Body += template.HTML("<ul id=\"results\">")
 	for _, entry := range references {
 		firstletter, _ := utf8.DecodeRuneInString(strings.ToLower(entry[1]))
 		if entry[0] == lang && firstletter == letter {
+			haswords = true
 			showme.Body += template.HTML("<li><a href=\"" +
 				entry[2] + "#" + entry[0] + "\">" + entry[1] + "</a></li>")
 		}
 	}
 	showme.Body += template.HTML("</ul>")
 
-	err = tmpl.Execute(file, showme)
-	if err != nil {
-		return err
+	if haswords {
+		file, err := os.Create("index_" + lang + "_" + fmt.Sprint(letter) + ".html")
+		defer file.Close()
+		if err != nil {
+			return err
+		}
+
+		err = tmpl.Execute(file, showme)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -149,8 +153,12 @@ func writeIndexHtml() error {
 		showme.Body += template.HTML("<div id=\"" + lang + "\"><span class=\"language\">" +
 			lang + ": </span>\n")
 		for _, letter := range alphabet {
-			showme.Body += template.HTML("<a href=\"index_" + lang + "_" +
-				fmt.Sprint(letter) + ".html\">" + string(letter) + "</a>\n")
+			index, err := os.Open("index_" + lang + "_" + fmt.Sprint(letter) + ".html")
+			index.Close()
+			if !os.IsNotExist(err) {
+				showme.Body += template.HTML("<a href=\"index_" + lang + "_" +
+					fmt.Sprint(letter) + ".html\">" + string(letter) + "</a>\n")
+			}
 		}
 		showme.Body += template.HTML("</div>")
 	}
